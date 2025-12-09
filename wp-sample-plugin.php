@@ -11,17 +11,24 @@ namespace WP_Sample_Plugin;
 
 if (!defined('ABSPATH')) exit;
 
+// Cache key constants
+define('WP_SAMPLE_CACHE_HELLO', 'wp_sample_hello');
+
+
 // Include classes
 require_once plugin_dir_path(__FILE__) . 'includes/class-api-handler.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-settings.php';
 
 /**
- * Initialize plugin
+ * Initialize plugin    
  */
 add_action('plugins_loaded', function () {
     // Register REST API routes
-    \WP_Sample_Plugin\API_Handler::register_routes();
+    API_Handler::register_routes();
 
-    // Initialize Settings page
-    \WP_Sample_Plugin\Settings::get_instance()->init();
+    // Initialize hooks for API (cache invalidation etc.)
+    API_Handler::init_hooks();
+
+    // Initialize Settings page (singleton)
+    Settings::get_instance()->init();
 });
